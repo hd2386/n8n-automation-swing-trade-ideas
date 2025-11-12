@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KI Swing Signale - Technical Analysis Bericht</title>
+    <style>
+      /* Responsive Email Styles */
+      @media only screen and (max-width: 640px) {
+        .email-container {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .email-padding {
+          padding-left: 15px !important;
+          padding-right: 15px !important;
+        }
+        .header-padding {
+          padding: 30px 20px !important;
+        }
+        .section-padding {
+          padding: 20px 15px !important;
+        }
+        .card-padding {
+          padding: 15px !important;
+        }
+        .outer-padding {
+          padding: 10px 0 !important;
+        }
+        .mobile-text-small {
+          font-size: 12px !important;
+        }
+        .mobile-hidden {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #fcfcfc;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    "
+  >
+    <!-- Email Container -->
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      class="outer-padding"
+      style="background-color: #fcfcfc; padding: 20px 0"
+    >
+      <tr>
+        <td align="center">
+          <!-- Main Content Table -->
+          <table
+            width="640"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            class="email-container"
+            style="
+              max-width: 640px;
+              background-color: #ffffff;
+              border-radius: 8px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            "
+          >
+            <!-- Header Section -->
+            <tr>
+              <td
+                class="header-padding"
+                style="
+                  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                  padding: 40px 30px;
+                  text-align: center;
+                "
+              >
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="text-align: center">
+                      <!-- AI Badge -->
+                      <div
+                        style="
+                          display: inline-block;
+                          background-color: rgba(255, 255, 255, 0.2);
+                          border: 1px solid rgba(255, 255, 255, 0.3);
+                          border-radius: 20px;
+                          padding: 6px 16px;
+                          margin-bottom: 16px;
+                        "
+                      >
+                        <span
+                          style="
+                            color: #ffffff;
+                            font-size: 12px;
+                            font-weight: 600;
+                            letter-spacing: 0.5px;
+                          "
+                          >POWERED BY GEMINI 2.5 PRO</span
+                        >
+                      </div>
+
+                      <!-- Title -->
+                      <h1
+                        style="
+                          color: #ffffff;
+                          font-size: 28px;
+                          font-weight: 700;
+                          margin: 0 0 8px 0;
+                          line-height: 1.3;
+                        "
+                      >
+                        Tägliche KI Swing Trade Signale
+                      </h1>
+
+                      <!-- Subtitle -->
+                      <p
+                        style="
+                          color: rgba(255, 255, 255, 0.9);
+                          font-size: 14px;
+                          margin: 0;
+                          font-weight: 400;
+                        "
+                      >
+                        {{new Date().toLocaleDateString('de-DE', { weekday:
+                        'long', year: 'numeric', month: 'long', day: 'numeric'
+                        })}} • Technical Analysis Bericht
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Introduction Section -->
+            <tr>
+              <td
+                class="section-padding"
+                style="
+                  padding: 30px;
+                  background-color: #f8f9fa;
+                  border-bottom: 1px solid #e9ecef;
+                "
+              >
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <!-- Value Proposition -->
+                      <div
+                        style="
+                          border-left: 4px solid #1e3c72;
+                          padding-left: 16px;
+                          margin-bottom: 20px;
+                        "
+                      >
+                        <p
+                          style="
+                            color: #495057;
+                            font-size: 15px;
+                            font-weight: 600;
+                            margin: 0;
+                            line-height: 1.5;
+                          "
+                        >
+                          Die Chancen von heute: KI-gestützte Analyse mit
+                          ausgewählten, hochpotentiellen Swing Trade Signalen.
+                        </p>
+                      </div>
+
+                      <p
+                        style="
+                          color: #495057;
+                          font-size: 14px;
+                          line-height: 1.7;
+                          margin: 0 0 16px 0;
+                        "
+                      >
+                        Täglich nach Marktschluss werden aus den 100 US-Aktien
+                        mit dem höchsten Potenzial
+                        <strong>5 Aktien</strong> ausgewählt und einer
+                        umfassenden technischen Analyse unterzogen.
+                      </p>
+
+                      <!-- Technical Process Section -->
+                      <div
+                        style="
+                          background-color: #ffffff;
+                          border: 1px solid #dee2e6;
+                          border-radius: 6px;
+                          padding: 16px;
+                          margin-bottom: 16px;
+                        "
+                      >
+                        <p
+                          style="
+                            color: #6c757d;
+                            font-size: 12px;
+                            font-weight: 600;
+                            margin: 0 0 10px 0;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                          "
+                        >
+                          Analyseprozess
+                        </p>
+                        <table
+                          width="100%"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                        >
+                          <tr>
+                            <td style="padding: 4px 0">
+                              <span
+                                style="
+                                  color: #495057;
+                                  font-size: 13px;
+                                  line-height: 1.6;
+                                "
+                              >
+                                1. Echtzeitkursdaten werden von
+                                <strong>Yahoo Finance</strong> abgerufen
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 4px 0">
+                              <span
+                                style="
+                                  color: #495057;
+                                  font-size: 13px;
+                                  line-height: 1.6;
+                                "
+                              >
+                                2. 250-Tage OHLC-Bars werden von
+                                <strong>Alpaca Markets</strong> bezogen
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 4px 0">
+                              <span
+                                style="
+                                  color: #495057;
+                                  font-size: 13px;
+                                  line-height: 1.6;
+                                "
+                              >
+                                3. RSI, MACD und andere technische Indikatoren
+                                werden berechnet
+                              </span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 4px 0">
+                              <span
+                                style="
+                                  color: #495057;
+                                  font-size: 13px;
+                                  line-height: 1.6;
+                                "
+                              >
+                                4. Alle Daten werden von
+                                <strong>Gemini 2.5 Pro</strong>
+                                analysiert
+                              </span>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <p
+                        style="
+                          color: #1a202c;
+                          font-size: 14px;
+                          line-height: 1.6;
+                          margin: 0;
+                          font-weight: 600;
+                          text-align: center;
+                        "
+                      >
+                        ✨ Ergebnis: Swing Trade Chancen mit dem höchsten
+                        Potenzial
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Trades Section -->
+            <tr>
+              <td class="section-padding" style="padding: 30px">
+                {{ $json.message.map(trade => `
+                <!-- Trade Card -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    margin-bottom: 24px;
+                    border: 1px solid #dee2e6;
+                    border-radius: 8px;
+                    overflow: hidden;
+                  "
+                >
+                  <!-- Trade Header -->
+                  ${trade.direction === 'Buy' ? `
+                  <tr>
+                    <td
+                      class="card-padding"
+                      style="
+                        background-color: #ffffff;
+                        padding: 20px;
+                        border-bottom: 2px solid #10b981;
+                      "
+                    >
+                      <table
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="vertical-align: middle; width: 65%">
+                            <h3
+                              style="
+                                color: #1a202c;
+                                font-size: 20px;
+                                font-weight: 700;
+                                margin: 0 0 4px 0;
+                              "
+                            >
+                              ${trade.name}
+                            </h3>
+                            <p
+                              style="
+                                color: #718096;
+                                font-size: 13px;
+                                margin: 0;
+                                font-weight: 500;
+                                letter-spacing: 0.5px;
+                              "
+                            >
+                              ${trade.symbol}
+                            </p>
+                          </td>
+                          <td
+                            align="right"
+                            style="vertical-align: middle; width: 35%"
+                          >
+                            <!-- Direction Badge -->
+
+                            <span
+                              style="
+                                color: #065f46;
+                                font-size: 14px;
+                                font-weight: 700;
+                                letter-spacing: 0.3px;
+                              "
+                            >
+                              ▲ ${trade.direction}
+                            </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  ` : trade.direction === 'Sell' ? `
+                  <tr>
+                    <td
+                      class="card-padding"
+                      style="
+                        background-color: #ffffff;
+                        padding: 20px;
+                        border-bottom: 2px solid #ef4444;
+                      "
+                    >
+                      <table
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="vertical-align: middle; width: 65%">
+                            <h3
+                              style="
+                                color: #1a202c;
+                                font-size: 20px;
+                                font-weight: 700;
+                                margin: 0 0 4px 0;
+                              "
+                            >
+                              ${trade.name}
+                            </h3>
+                            <p
+                              style="
+                                color: #718096;
+                                font-size: 13px;
+                                margin: 0;
+                                font-weight: 500;
+                                letter-spacing: 0.5px;
+                              "
+                            >
+                              ${trade.symbol}
+                            </p>
+                          </td>
+                          <td
+                            align="right"
+                            style="vertical-align: middle; width: 35%"
+                          >
+                            <!-- Direction Badge -->
+
+                            <span
+                              style="
+                                color: #991b1b;
+                                font-size: 14px;
+                                font-weight: 700;
+                                letter-spacing: 0.3px;
+                              "
+                            >
+                              ▼ ${trade.direction}
+                            </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  ` : `
+                  <tr>
+                    <td
+                      class="card-padding"
+                      style="
+                        background-color: #ffffff;
+                        padding: 20px;
+                        border-bottom: 2px solid #f59e0b;
+                      "
+                    >
+                      <table
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="vertical-align: middle; width: 65%">
+                            <h3
+                              style="
+                                color: #1a202c;
+                                font-size: 20px;
+                                font-weight: 700;
+                                margin: 0 0 4px 0;
+                              "
+                            >
+                              ${trade.name}
+                            </h3>
+                            <p
+                              style="
+                                color: #718096;
+                                font-size: 13px;
+                                margin: 0;
+                                font-weight: 500;
+                                letter-spacing: 0.5px;
+                              "
+                            >
+                              ${trade.symbol}
+                            </p>
+                          </td>
+                          <td
+                            align="right"
+                            style="vertical-align: middle; width: 35%"
+                          >
+                            <!-- Direction Badge -->
+
+                            <span
+                              style="
+                                color: #92400e;
+                                font-size: 14px;
+                                font-weight: 700;
+                                letter-spacing: 0.3px;
+                              "
+                            >
+                              ${trade.direction}
+                            </span>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  `}
+
+                  <!-- Trade Details -->
+                  <tr>
+                    <td style="background-color: #f8f9fa; padding: 0">
+                      <table
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <!-- Current Price -->
+                        <tr>
+                          <td
+                            style="
+                              padding: 14px 20px;
+                              border-bottom: 1px solid #e9ecef;
+                            "
+                          >
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >Aktueller Kurs</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #212529;
+                                      font-size: 15px;
+                                      font-weight: 700;
+                                    "
+                                    >${trade.currentPrice}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Entry Price -->
+                        <tr>
+                          <td
+                            style="
+                              padding: 14px 20px;
+                              border-bottom: 1px solid #e9ecef;
+                              background-color: #ffffff;
+                            "
+                          >
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >→ Einstieg (Entry)</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #212529;
+                                      font-size: 15px;
+                                      font-weight: 700;
+                                    "
+                                    >${trade.entry}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Target Price -->
+                        <tr>
+                          <td
+                            style="
+                              padding: 14px 20px;
+                              border-bottom: 1px solid #e9ecef;
+                            "
+                          >
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >◎ Ziel (Target)</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #212529;
+                                      font-size: 15px;
+                                      font-weight: 700;
+                                    "
+                                    >${trade.target}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Stop Loss -->
+                        <tr>
+                          <td
+                            style="
+                              padding: 14px 20px;
+                              border-bottom: 1px solid #e9ecef;
+                              background-color: #ffffff;
+                            "
+                          >
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >✖ Stop Loss</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #212529;
+                                      font-size: 15px;
+                                      font-weight: 700;
+                                    "
+                                    >${trade.stopLoss}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Time Frame -->
+                        <tr>
+                          <td
+                            style="
+                              padding: 14px 20px;
+                              border-bottom: 1px solid #e9ecef;
+                              background-color: #ffffff;
+                            "
+                          >
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >⌛ Zeitrahmen</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #212529;
+                                      font-size: 14px;
+                                      font-weight: 600;
+                                    "
+                                    >${trade.timeFrame}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+
+                        <!-- Risk/Reward Ratio (if available) -->
+                        ${trade.riskRewardRatio ? `
+                        <tr>
+                          <td style="padding: 14px 20px">
+                            <table
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="width: 50%">
+                                  <span
+                                    style="
+                                      color: #6c757d;
+                                      font-size: 13px;
+                                      font-weight: 600;
+                                    "
+                                    >Risiko/Rendite-Verhältnis</span
+                                  >
+                                </td>
+                                <td align="right">
+                                  <span
+                                    style="
+                                      color: #059669;
+                                      font-size: 14px;
+                                      font-weight: 700;
+                                    "
+                                    >1:${trade.riskRewardRatio}</span
+                                  >
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        ` : ''}
+                      </table>
+                    </td>
+                  </tr>
+
+                  <!-- Trade Reason -->
+                  <tr>
+                    <td
+                      class="card-padding"
+                      style="
+                        background-color: #ffffff;
+                        padding: 20px 20px 16px 20px;
+                        border-top: 1px solid #dee2e6;
+                      "
+                    >
+                      <p
+                        style="
+                          color: #6c757d;
+                          font-size: 12px;
+                          font-weight: 600;
+                          margin: 0 0 8px 0;
+                          text-transform: uppercase;
+                          letter-spacing: 0.5px;
+                        "
+                      >
+                        📊 Technical Analysis
+                      </p>
+                      <p
+                        style="
+                          color: #495057;
+                          font-size: 14px;
+                          line-height: 1.6;
+                          margin: 0;
+                        "
+                      >
+                        ${trade.reason}
+                      </p>
+                    </td>
+                  </tr>
+
+                  <!-- Trade Suggestion -->
+                  ${trade.suggestion ? `
+                  <tr>
+                    <td
+                      class="card-padding"
+                      style="
+                        background-color: #f8f9fa;
+                        padding: 16px 20px 20px 20px;
+                        border-top: 1px solid #dee2e6;
+                      "
+                    >
+                      <p
+                        style="
+                          color: #6c757d;
+                          font-size: 12px;
+                          font-weight: 600;
+                          margin: 0 0 8px 0;
+                          text-transform: uppercase;
+                          letter-spacing: 0.5px;
+                        "
+                      >
+                        Empfehlung
+                      </p>
+                      <p
+                        style="
+                          color: #495057;
+                          font-size: 14px;
+                          line-height: 1.6;
+                          margin: 0;
+                        "
+                      >
+                        ${trade.suggestion}
+                      </p>
+                    </td>
+                  </tr>
+                  ` : ''}
+                </table>
+                `).join('') }}
+              </td>
+            </tr>
+
+            <!-- Disclaimer Section -->
+            <tr>
+              <td
+                class="section-padding"
+                style="
+                  background-color: #fff3cd;
+                  border-top: 3px solid #ffc107;
+                  padding: 20px 30px;
+                "
+              >
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+                      <p
+                        style="
+                          color: #856404;
+                          font-size: 13px;
+                          line-height: 1.7;
+                          margin: 0;
+                          font-weight: 500;
+                        "
+                      >
+                        <strong>Risikohinweis:</strong> Dieser Bericht dient
+                        ausschließlich zu Informationszwecken und stellt keine
+                        Anlageberatung dar. Der Handel auf den Finanzmärkten
+                        bringt hohe Risiken und kann zu Kapitalverlusten führen.
+                        Die Analyse basiert ausschließlich auf technischen
+                        Indikatoren. Weitere externe oder fundamentale Faktoren
+                        bleiben unberücksichtigt.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer Section -->
+            <tr>
+              <td
+                class="section-padding"
+                style="
+                  background-color: #f8f9fa;
+                  padding: 30px;
+                  text-align: center;
+                  border-top: 1px solid #dee2e6;
+                "
+              >
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="text-align: center">
+                      <!-- Data Sources -->
+                      <div style="margin-bottom: 20px">
+                        <p
+                          style="
+                            color: #495057;
+                            font-size: 11px;
+                            margin: 0 0 12px 0;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                          "
+                        >
+                          Datenquellen & Technologie
+                        </p>
+                        <table
+                          width="100%"
+                          cellpadding="0"
+                          cellspacing="0"
+                          border="0"
+                        >
+                          <tr>
+                            <td
+                              style="
+                                padding: 6px 0;
+                                border-bottom: 1px solid #e9ecef;
+                              "
+                            >
+                              <table
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                              >
+                                <tr>
+                                  <td style="width: 45%; vertical-align: top">
+                                    <span
+                                      style="color: #6c757d; font-size: 12px"
+                                      >KI-Modell</span
+                                    >
+                                  </td>
+                                  <td
+                                    style="
+                                      width: 55%;
+                                      text-align: right;
+                                      vertical-align: top;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        color: #212529;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                      "
+                                      >Gemini 2.5 Pro</span
+                                    >
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              style="
+                                padding: 6px 0;
+                                border-bottom: 1px solid #e9ecef;
+                              "
+                            >
+                              <table
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                              >
+                                <tr>
+                                  <td style="width: 45%; vertical-align: top">
+                                    <span
+                                      style="color: #6c757d; font-size: 12px"
+                                      >Kursdaten</span
+                                    >
+                                  </td>
+                                  <td
+                                    style="
+                                      width: 55%;
+                                      text-align: right;
+                                      vertical-align: top;
+                                    "
+                                  >
+                                    <a
+                                      href="https://finance.yahoo.com/"
+                                      target="_blank"
+                                      style="
+                                        color: #0d6efd;
+                                        text-decoration: none;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                      "
+                                      >Yahoo Finance</a
+                                    >
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              style="
+                                padding: 6px 0;
+                                border-bottom: 1px solid #e9ecef;
+                              "
+                            >
+                              <table
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                              >
+                                <tr>
+                                  <td style="width: 45%; vertical-align: top">
+                                    <span
+                                      style="color: #6c757d; font-size: 12px"
+                                      >OHLC Bars</span
+                                    >
+                                  </td>
+                                  <td
+                                    style="
+                                      width: 55%;
+                                      text-align: right;
+                                      vertical-align: top;
+                                    "
+                                  >
+                                    <a
+                                      href="https://alpaca.markets/"
+                                      target="_blank"
+                                      style="
+                                        color: #0d6efd;
+                                        text-decoration: none;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                      "
+                                      >Alpaca Markets</a
+                                    >
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 6px 0 0 0">
+                              <table
+                                width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                              >
+                                <tr>
+                                  <td style="width: 45%; vertical-align: top">
+                                    <span
+                                      style="color: #6c757d; font-size: 12px"
+                                      >Technische Indikatoren</span
+                                    >
+                                  </td>
+                                  <td
+                                    style="
+                                      width: 55%;
+                                      text-align: right;
+                                      vertical-align: top;
+                                    "
+                                  >
+                                    <span
+                                      style="
+                                        color: #212529;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                      "
+                                      >Eigener Algorithmus</span
+                                    >
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+
+                      <!-- Divider -->
+                      <div
+                        style="
+                          height: 1px;
+                          background-color: #dee2e6;
+                          margin: 16px 0;
+                        "
+                      ></div>
+
+                      <!-- Brand -->
+                      <p
+                        style="
+                          color: #495057;
+                          font-size: 13px;
+                          font-weight: 600;
+                          margin: 0 0 4px 0;
+                        "
+                      >
+                        HD Signals
+                      </p>
+
+                      <!-- Copyright -->
+                      <p style="color: #adb5bd; font-size: 11px; margin: 0">
+                        © 2025 HD Signals. Alle Rechte vorbehalten.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
