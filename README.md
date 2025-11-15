@@ -56,7 +56,7 @@ To keep API keys and recipient addresses out of the workflow export, all sensiti
 
 The workflow runs automatically on weekdays shortly after the market closes. The steps in order:
 
-1. **✅ Trigger – Daily Market Close**: Fires Monday through Friday at 16:05 (respecting the timezone configured on your n8n instance).
+1. **✅ Trigger – Daily Market Close**: Fires Monday through Friday at 16:05 EST (respecting the timezone configured on your n8n instance).
 2. **🔢 Prepare Stock List (Personal)**: Randomly picks five tickers from your curated universe so that the analysis rotates through different symbols.
 3. **Fetch OHLCV via APCA API**: Retrieves up to 250 daily bars from Alpaca.
 4. **Fetch Quote via Rapid API**: Pulls the latest price and fundamental data from the Yahoo Finance RapidAPI endpoint.
@@ -84,7 +84,6 @@ Inside the workflow, variables are referenced with `{{ $env.VARIABLE_NAME }}`. E
 
 n8n substitutes the values at runtime from your `.env` file (or from system environment variables when running on a server).
 
----
 
 ## Key Files in This Repository
 
@@ -92,7 +91,6 @@ n8n substitutes the values at runtime from your `.env` file (or from system envi
 - `stocks_list.js`: Maintains the curated list of tickers the workflow samples from each day.
 - `n8n-swing-email-template.html`: Provides the HTML email layout used by the Gmail node to deliver the daily report.
 
----
 
 ## Best Practices
 
@@ -100,7 +98,6 @@ n8n substitutes the values at runtime from your `.env` file (or from system envi
 - When the recipient list changes, update **only** the `.env` file—no workflow edits required.
 - Google Gemini and Gmail are managed with n8n credential nodes. The IDs you see in the exported JSON are references only; they do not contain secrets.
 
----
 
 ## Security
 
