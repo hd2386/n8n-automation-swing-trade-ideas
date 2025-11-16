@@ -26,7 +26,6 @@ export function StockSelector({
   maxSelections = 5,
 }: StockSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   const availableStocks = AVAILABLE_STOCKS.filter(
     (stock) => !selectedStocks.includes(stock.ticker)
@@ -45,14 +44,8 @@ export function StockSelector({
     onSelectionChange(selectedStocks.filter((s) => s !== ticker));
   };
 
-  const getStockName = (ticker: string) => {
-    return AVAILABLE_STOCKS.find((s) => s.ticker === ticker)?.name || ticker;
-  };
-
   const getStockIcon = (ticker: string) => {
-    // Using TradingView logo service (more reliable and up-to-date)
-    // Format: https://s3-symbol-logo.tradingview.com/{ticker}.svg
-    return `https://s3-symbol-logo.tradingview.com/${ticker.toLowerCase()}.svg`;
+    return `https://financialmodelingprep.com/image-stock/${ticker.toUpperCase()}.png`;
   };
 
   return (
@@ -72,26 +65,22 @@ export function StockSelector({
             <Badge
               key={ticker}
               variant="secondary"
-              className="flex items-center gap-2 px-3 py-1.5"
+              className="flex items-center gap-2 px-3 py-1.5 bg-slate-200 text-secondary-background"
             >
-              <div className="relative h-4 w-4 overflow-hidden rounded bg-muted flex items-center justify-center">
-                {failedImages.has(ticker) ? (
-                  <span className="text-[10px] font-bold text-muted-foreground">
-                    {ticker[0]}
-                  </span>
-                ) : (
-                  <Image
-                    src={getStockIcon(ticker)}
-                    alt={ticker}
-                    width={16}
-                    height={16}
-                    className="object-contain"
-                    unoptimized
-                    onError={() => {
-                      setFailedImages((prev) => new Set(prev).add(ticker));
-                    }}
-                  />
-                )}
+              <div className="relative h-4 w-4 overflow-hidden rounded ">
+                <Image
+                  src={getStockIcon(ticker)}
+                  alt={ticker}
+                  width={16}
+                  height={16}
+                  className="object-contain"
+                  unoptimized
+                  onError={(e) => {
+                    // Fallback to ticker text if image fails
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
               </div>
               <span className="font-medium">{ticker}</span>
               <button
@@ -119,30 +108,23 @@ export function StockSelector({
           <SelectTrigger>
             <SelectValue placeholder="Add a stock..." />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-slate-200 text-secondary-background">
             {availableStocks.map((stock) => (
               <SelectItem key={stock.ticker} value={stock.ticker}>
                 <div className="flex items-center gap-2">
-                  <div className="relative h-5 w-5 overflow-hidden rounded bg-muted flex items-center justify-center">
-                    {failedImages.has(stock.ticker) ? (
-                      <span className="text-xs font-bold text-muted-foreground">
-                        {stock.ticker[0]}
-                      </span>
-                    ) : (
-                      <Image
-                        src={getStockIcon(stock.ticker)}
-                        alt={stock.ticker}
-                        width={20}
-                        height={20}
-                        className="object-contain"
-                        unoptimized
-                        onError={() => {
-                          setFailedImages((prev) =>
-                            new Set(prev).add(stock.ticker)
-                          );
-                        }}
-                      />
-                    )}
+                  <div className="relative h-5 w-5 overflow-hidden rounded">
+                    <Image
+                      src={`https://financialmodelingprep.com/image-stock/${stock.ticker.toUpperCase()}.png`}
+                      alt={stock.ticker}
+                      width={20}
+                      height={20}
+                      className="object-contain"
+                      unoptimized
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                      }}
+                    />
                   </div>
                   <span className="font-medium">{stock.ticker}</span>
                   <span className="text-muted-foreground text-sm">

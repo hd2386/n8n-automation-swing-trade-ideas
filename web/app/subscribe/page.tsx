@@ -20,7 +20,6 @@ import Link from "next/link";
 export default function SubscribePage() {
   const [subscription, setSubscription] = useState(subscriptionStorage.get());
   const [isEditing, setIsEditing] = useState(!subscription);
-  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   const handleSuccess = () => {
     setSubscription(subscriptionStorage.get());
@@ -40,8 +39,7 @@ export default function SubscribePage() {
   };
 
   const getStockIcon = (ticker: string) => {
-    // Using TradingView logo service (more reliable and up-to-date)
-    return `https://s3-symbol-logo.tradingview.com/${ticker.toLowerCase()}.svg`;
+    return `https://financialmodelingprep.com/image-stock/${ticker.toUpperCase()}.png`;
   };
 
   if (isEditing) {
@@ -116,7 +114,7 @@ export default function SubscribePage() {
             </div>
 
             <div>
-              <h3 className="mb-4 text-sm font-medium">
+              <h3 className="mb-4 text-sm font-medium ">
                 Selected Stocks ({subscription?.selectedStocks.length || 0})
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -126,26 +124,19 @@ export default function SubscribePage() {
                     variant="secondary"
                     className="flex items-center gap-2 px-3 py-1.5"
                   >
-                    <div className="relative h-4 w-4 overflow-hidden rounded bg-muted flex items-center justify-center">
-                      {failedImages.has(ticker) ? (
-                        <span className="text-[10px] font-bold text-muted-foreground">
-                          {ticker[0]}
-                        </span>
-                      ) : (
-                        <Image
-                          src={getStockIcon(ticker)}
-                          alt={ticker}
-                          width={16}
-                          height={16}
-                          className="object-contain"
-                          unoptimized
-                          onError={() => {
-                            setFailedImages((prev) =>
-                              new Set(prev).add(ticker)
-                            );
-                          }}
-                        />
-                      )}
+                    <div className="relative h-4 w-4 overflow-hidden rounded ">
+                      <Image
+                        src={getStockIcon(ticker)}
+                        alt={ticker}
+                        width={16}
+                        height={16}
+                        className="object-contain"
+                        unoptimized
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                        }}
+                      />
                     </div>
                     <span className="font-medium">{ticker}</span>
                     <span className="text-xs text-muted-foreground">

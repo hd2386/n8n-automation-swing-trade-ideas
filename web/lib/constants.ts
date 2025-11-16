@@ -23,7 +23,6 @@ export const AVAILABLE_STOCKS: Stock[] = [
   { ticker: "OPEN", name: "Opendoor Technologies Inc." },
   { ticker: "TSLA", name: "Tesla, Inc." },
   { ticker: "ZETA", name: "Zeta Global Holdings Corp." },
-  { ticker: "RR", name: "Richtech Robotics Inc." },
   { ticker: "RGTI", name: "Rigetti Computing, Inc." },
   { ticker: "ASTS", name: "AST SpaceMobile, Inc." },
   { ticker: "OKLO", name: "Oklo Inc." },
@@ -110,7 +109,7 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
   {
     title: "Prepare Stock List",
     description:
-      "You select 1-5 stocks yourself in the website for daily signal analysis.",
+      "Randomly picks five tickers from your curated universe so that the analysis rotates through different symbols.",
   },
   {
     title: "Fetch Market Data",

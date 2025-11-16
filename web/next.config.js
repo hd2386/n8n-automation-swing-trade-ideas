@@ -5,11 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "s3-symbol-logo.tradingview.com",
-      },
-      {
-        protocol: "https",
-        hostname: "logo.clearbit.com",
+        hostname: "financialmodelingprep.com",
       },
     ],
   },
