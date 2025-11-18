@@ -1,4 +1,91 @@
 const stocks = $json.stocks;
+const profileDefaults = {
+  riskProfile: "balanced",
+  capital: 25000,
+  riskPerTrade: 2,
+  timeHorizon: "standard",
+  earningsSensitivity: "neutral",
+  betaTolerance: "medium",
+  exposureLimit: 5,
+  customTicker: "",
+  entryPreference: "balanced",
+};
+
+const userProfile = {
+  ...profileDefaults,
+  ...($json.userProfile || {}),
+};
+
+const entryPreferenceGuidance = {
+  pullback:
+    "Priorisiere Pullback-Setups (EMA20/BB Middle/SMA50). Breakouts nur, wenn der Trend außergewöhnlich stark ist.",
+  breakout:
+    "Momentum-orientiert: Breakouts mit starkem Volumen bevorzugen, Pullbacks nur bei klarer Trendbestätigung.",
+  balanced:
+    "Nutze Pullback- und Breakout-Signale gleichwertig; entscheide anhand von Momentum/Volumen.",
+};
+
+const riskProfileGuidance = {
+  defensive:
+    "Defensives Profil: Setze eher konservative Stops (1.2-1.5x ATR), nur sehr saubere Trends handeln, bevorzugt 2-4 Wochen Haltezeit.",
+  balanced:
+    "Ausgewogenes Profil: Standard Stops (1.5x ATR). Kombination aus Trend- und Mean-Reversion-Setups erlaubt.",
+  aggressive:
+    "Aggressives Profil: Momentum bevorzugt, Stops bis 2x ATR zulässig. Höhere Beta-Werte akzeptabel, aber klar dokumentieren.",
+};
+
+const earningsSensitivityGuidance = {
+  strict:
+    "Strict Earnings Mode: Setze bereits ab <7 Tagen vor Earnings automatisch auf Hold und weise explizit auf Earnings-Risiko hin.",
+  neutral:
+    "Standard Earnings Mode: Nutze bestehende Regeln (Hold bei <3 Tagen, Pre-Earnings bei 3-14 Tagen).",
+  opportunistic:
+    "Opportunistic Mode: Pre-Earnings Trades erlaubt, jedoch Grund für erhöhtes Risiko im Reason-Feld erläutern.",
+};
+
+const betaToleranceGuidance = {
+  low: "Beta <= 1 bevorzugen. Bei Beta > 1 ausdrücklich begründen und Stop enger halten (1.2x ATR).",
+  medium:
+    "Beta <= 1.5 akzeptiert. Standard Stop-Logik verwenden, hohe Beta nur mit Momentum-Bestätigung.",
+  high: "Hohe Beta zugelassen (>1.5). Nutze 2x ATR Stops und verkürzte Timeframes (1-2 Wochen).",
+};
+
+const profileContext = `### BENUTZERPROFIL ###
+- Risiko-Profil: ${userProfile.riskProfile} (${
+  riskProfileGuidance[userProfile.riskProfile]
+})
+- Kapital: ${userProfile.capital} USD | Risiko pro Trade: ${
+  userProfile.riskPerTrade
+}%
+- Zeithorizont: ${userProfile.timeHorizon}
+- Earnings-Sensitivität: ${userProfile.earningsSensitivity} (${
+  earningsSensitivityGuidance[userProfile.earningsSensitivity]
+})
+- Beta-Toleranz: ${userProfile.betaTolerance} (${
+  betaToleranceGuidance[userProfile.betaTolerance]
+})
+- Exposure-Limit: Max. ${userProfile.exposureLimit} gleichzeitige Signale.
+- Entry-Präferenz: ${userProfile.entryPreference} (${
+  entryPreferenceGuidance[userProfile.entryPreference]
+})
+- Wunsch-Ticker (falls nicht in Liste): ${
+  userProfile.customTicker || "keine Vorgabe"
+}
+
+### PERSONALISIERTE REGELN ###
+1. Passe Stop-Loss Multiplikatoren, Timeframes und Richtung der Signale an das Risiko- und Beta-Profil an (siehe oben).
+2. Überschreite das Exposure-Limit nicht – wenn bereits ${
+  userProfile.exposureLimit
+} aktive Trades vorgeschlagen würden, zusätzliche Aktien als 'Hold' markieren und einen konkreten zukünftigen Einstieg beschreiben.
+3. Entry-Präferenz beachten: ${
+  entryPreferenceGuidance[userProfile.entryPreference]
+}
+4. Earnings-Sensitivität anwenden: ${
+  earningsSensitivityGuidance[userProfile.earningsSensitivity]
+}
+5. Wenn ein Wunsch-Ticker hinterlegt ist (${
+  userProfile.customTicker || "keiner"
+}), beziehe ihn in die Begründungen ein (z. B. Alternativen oder Szenarien).`;
 
 let formattedStocks = stocks
   .map((stock) => {
@@ -45,6 +132,8 @@ return [
   {
     json: {
       prompt: `Du bist ein Swing Trading Assistent für US-Aktien und ein Experte für technische Analyse. Dein Ziel ist es, aus den bereitgestellten Daten Swing Trading Entscheidungen zu generieren, **indem du einen ausgewogenen Ansatz verfolgst, der weder zu viele noch zu wenige Signale erzeugt**.
+
+${profileContext}
 
 ### ANZUWENDENDE STRATEGIE ###
 
@@ -108,10 +197,10 @@ return [
     "suggestion": "..." // Nur für 'Hold'-Entscheidungen zwingend. Für andere null.
 }
 
-* **Filterung und Earnings-Risikomanagement:**
-* Wenn \`earningsInDays\` **weniger als 3 Tage** beträgt, setze \`direction\` auf \`"Hold"\`, auch wenn alle anderen Bedingungen erfüllt sind, und schreibe als \`reason\`: \`"Hohes Risiko aufgrund von Earnings-Veröffentlichung in weniger als 3 Tagen."\`
-* Wenn \`earningsInDays\` **zwischen 3 und 14 Tagen** liegt und Buy/Sell-Bedingungen erfüllt sind, behalte \`direction\` bei, aber setze \`timeFrame\` auf \`"Kurzfristiger Swing (Pre-Earnings)"\` und füge das Earnings-Risiko im \`reason\`-Feld hinzu.
-* Wenn \`earningsInDays\` **mehr als 14 Tage** beträgt, gelten die Standardregeln.
+* **Filterung und Earnings-Risikomanagement (Profil-abhängig):**
+  - **Strict:** Wenn \`earningsInDays < 7\`, immer \`"Hold"\` setzen und den Earnings-Hinweis in den Grund aufnehmen.
+  - **Neutral (Standard):** Wenn \`earningsInDays < 3\`, \`"Hold"\`. Liegt der Wert zwischen 3-14 Tagen, Trade erlauben, aber \`timeFrame = "Kurzfristiger Swing (Pre-Earnings)"\` und Risiko im Grund erwähnen. >14 Tage = Standard.
+  - **Opportunistisch:** Pre-Earnings Trades sind erlaubt, solange \`earningsInDays ≥ 2\`. Bei 3-14 Tagen trotzdem den Hinweis platzieren; erst bei <2 Tagen auf \`"Hold"\` wechseln.
 
 * **Parameter:**
 * \`stopLoss\`: 

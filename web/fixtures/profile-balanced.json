@@ -1,0 +1,13 @@
+{
+  "email": "swing@example.com",
+  "selectedStocks": ["NVDA", "MSFT", "PLTR"],
+  "riskProfile": "balanced",
+  "capital": 25000,
+  "riskPerTrade": 2,
+  "timeHorizon": "standard",
+  "earningsSensitivity": "neutral",
+  "betaTolerance": "medium",
+  "exposureLimit": 5,
+  "customTicker": "TSM",
+  "entryPreference": "pullback"
+}

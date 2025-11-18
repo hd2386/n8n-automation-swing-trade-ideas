@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { subscriptionStorage } from "@/lib/storage";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { profileEmailStorage } from "@/lib/storage";
 import { SubscriptionForm } from "@/components/features/subscription-form";
 import {
   Card,
@@ -12,25 +12,121 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AVAILABLE_STOCKS } from "@/lib/constants";
+import {
+  AVAILABLE_STOCKS,
+  BETA_TOLERANCE_OPTIONS,
+  EARNINGS_SENSITIVITY_OPTIONS,
+  ENTRY_PREFERENCE_OPTIONS,
+  RISK_PROFILE_OPTIONS,
+  TIME_HORIZON_OPTIONS,
+} from "@/lib/constants";
+import type { Subscription } from "@/types";
 import { Edit2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+const getOptionLabel = (
+  options: readonly { value: string; label: string }[],
+  value?: string
+) => options.find((option) => option.value === value)?.label ?? value ?? "-";
+
 export default function SubscribePage() {
-  const [subscription, setSubscription] = useState(subscriptionStorage.get());
-  const [isEditing, setIsEditing] = useState(!subscription);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [isEditing, setIsEditing] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [bootstrapEmail, setBootstrapEmail] = useState("");
 
-  const handleSuccess = () => {
-    setSubscription(subscriptionStorage.get());
-    setIsEditing(false);
-  };
+  const initialFormValues = useMemo(() => {
+    if (!subscription) {
+      return {
+        email: bootstrapEmail,
+        stocks: [] as string[],
+        preferences: undefined,
+      };
+    }
 
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete your subscription?")) {
-      subscriptionStorage.delete();
+    return {
+      email: subscription.email,
+      stocks: [...subscription.selectedStocks],
+      preferences: subscription.preferences,
+    };
+  }, [subscription, bootstrapEmail]);
+
+  const fetchProfile = useCallback(async (email: string) => {
+    if (!email) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/profile?email=${encodeURIComponent(email)}`
+      );
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.message || "Profile not found");
+      }
+
+      const profile = (await response.json()) as Subscription;
+      setSubscription(profile);
+      setIsEditing(false);
+      profileEmailStorage.set(email);
+      setBootstrapEmail(email);
+    } catch (error) {
       setSubscription(null);
       setIsEditing(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const savedEmail = profileEmailStorage.get();
+    if (savedEmail) {
+      setBootstrapEmail(savedEmail);
+      void fetchProfile(savedEmail);
+    } else {
+      setIsLoading(false);
+    }
+  }, [fetchProfile]);
+
+  const handleSuccess = (profile: Subscription) => {
+    setSubscription(profile);
+    setIsEditing(false);
+    setBootstrapEmail(profile.email);
+  };
+
+  const handleDelete = async () => {
+    if (!subscription) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete your personalized trading profile?"
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/profile?email=${encodeURIComponent(subscription.email)}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to delete profile");
+      }
+
+      setSubscription(null);
+      profileEmailStorage.clear();
+      setBootstrapEmail("");
+      setIsEditing(true);
+    } catch (error) {
+      console.error("Failed to delete profile:", error);
+      alert("Profil konnte nicht gelöscht werden.");
     }
   };
 
@@ -58,14 +154,24 @@ export default function SubscribePage() {
                 : "Get started by entering your email and selecting stocks."}
             </p>
           </div>
+          {isLoading && (
+            <div className="mb-6 rounded-lg border bg-muted/40 p-4 text-sm text-muted-foreground">
+              Lade vorhandene Einstellungen ...
+            </div>
+          )}
           <SubscriptionForm
-            initialEmail={subscription?.email || ""}
-            initialStocks={subscription?.selectedStocks || []}
+            initialEmail={initialFormValues.email || ""}
+            initialStocks={initialFormValues.stocks}
+            initialPreferences={initialFormValues.preferences}
             onSuccess={handleSuccess}
           />
         </div>
       </div>
     );
+  }
+
+  if (!subscription) {
+    return null;
   }
 
   return (
@@ -161,6 +267,98 @@ export default function SubscribePage() {
                 </p>
               )}
             </div>
+
+            {subscription?.preferences && (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium">Risk Parameters</h3>
+                  <div className="mt-2 grid gap-4 rounded-lg border p-4 text-sm sm:grid-cols-2">
+                    <div>
+                      <p className="text-muted-foreground">Risikoprofil</p>
+                      <p className="font-medium">
+                        {getOptionLabel(
+                          RISK_PROFILE_OPTIONS,
+                          subscription.preferences.riskProfile
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Kapital</p>
+                      <p className="font-medium">
+                        {currencyFormatter.format(
+                          subscription.preferences.capital
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Risiko pro Trade</p>
+                      <p className="font-medium">
+                        {subscription.preferences.riskPerTrade}%
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">
+                        Max. gleichzeitige Positionen
+                      </p>
+                      <p className="font-medium">
+                        {subscription.preferences.exposureLimit}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium">Trading-Praeferenzen</h3>
+                  <div className="mt-2 grid gap-4 rounded-lg border p-4 text-sm sm:grid-cols-2">
+                    <div>
+                      <p className="text-muted-foreground">Zeithorizont</p>
+                      <p className="font-medium">
+                        {getOptionLabel(
+                          TIME_HORIZON_OPTIONS,
+                          subscription.preferences.timeHorizon
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">
+                        Earnings/News Verhalten
+                      </p>
+                      <p className="font-medium">
+                        {getOptionLabel(
+                          EARNINGS_SENSITIVITY_OPTIONS,
+                          subscription.preferences.earningsSensitivity
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Beta Toleranz</p>
+                      <p className="font-medium">
+                        {getOptionLabel(
+                          BETA_TOLERANCE_OPTIONS,
+                          subscription.preferences.betaTolerance
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Entry-Stil</p>
+                      <p className="font-medium">
+                        {getOptionLabel(
+                          ENTRY_PREFERENCE_OPTIONS,
+                          subscription.preferences.entryPreference
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {subscription.preferences.customTicker && (
+                  <div className="rounded-lg border p-4 text-sm">
+                    <p className="text-muted-foreground">Manueller Ticker</p>
+                    <p className="font-medium">
+                      {subscription.preferences.customTicker}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

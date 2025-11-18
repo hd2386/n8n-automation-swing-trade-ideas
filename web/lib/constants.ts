@@ -1,4 +1,4 @@
-import { Stock, WorkflowStep } from "@/types";
+import { Stock, TraderPreferences, WorkflowStep } from "@/types";
 
 // Stock list extracted from n8n workflow
 export const AVAILABLE_STOCKS: Stock[] = [
@@ -102,25 +102,101 @@ export const AVAILABLE_STOCKS: Stock[] = [
 // Workflow steps from README
 export const WORKFLOW_STEPS: WorkflowStep[] = [
   {
-    title: "Trigger – Daily Market Close",
+    title: "Profile Intake",
     description:
-      "Fires Monday through Friday at 16:05 (respecting the timezone configured on your n8n instance).",
+      "Trader defines risk profile, capital, exposure limit and optional manual ticker for personalization.",
   },
   {
-    title: "Prepare Stock List",
+    title: "Market Data Sync",
     description:
-      "Randomly picks five tickers from your curated universe so that the analysis rotates through different symbols.",
+      "Pulls the user-selected tickers (1-5) plus the manual ticker from Alpaca/Yahoo Finance with full indicator set.",
   },
   {
-    title: "Fetch Market Data",
+    title: "Prompt Builder",
     description:
-      "Retrieves up to 250 daily bars from Alpaca and pulls the latest price and fundamental data from Yahoo Finance.",
+      "n8n merges the technical snapshot with the saved profile and produces a structured German prompt for Gemini 2.5 Pro.",
   },
   {
-    title: "Technical Analysis",
+    title: "Signal Delivery",
     description:
-      "Computes technical indicators (RSI, MACD, ATR, Bollinger Bands, moving averages, MFI, etc.) and generates swing trade recommendations using Gemini AI.",
+      "Gemini returns personalized swing trade JSON which is forwarded to the subscriber via email or webhook.",
   },
 ];
 
-export const STORAGE_KEY = "n8n-trade-subscription";
+export const RISK_PROFILE_VALUES = [
+  "defensive",
+  "balanced",
+  "aggressive",
+] as const;
+
+export const TIME_HORIZON_VALUES = ["short", "standard", "flexible"] as const;
+
+export const EARNINGS_SENSITIVITY_VALUES = [
+  "strict",
+  "neutral",
+  "opportunistic",
+] as const;
+
+export const BETA_TOLERANCE_VALUES = ["low", "medium", "high"] as const;
+
+export const ENTRY_PREFERENCE_VALUES = [
+  "pullback",
+  "breakout",
+  "balanced",
+] as const;
+
+export const RISK_PROFILE_OPTIONS = [
+  {
+    value: RISK_PROFILE_VALUES[0],
+    label: "Defensiv – Fokus auf Kapitalerhalt",
+  },
+  { value: RISK_PROFILE_VALUES[1], label: "Ausgewogen – 2-4R Chance" },
+  {
+    value: RISK_PROFILE_VALUES[2],
+    label: "Aggressiv – Momentum & hohes Risiko",
+  },
+] as const;
+
+export const TIME_HORIZON_OPTIONS = [
+  { value: TIME_HORIZON_VALUES[0], label: "Kurzfristig (1-2 Wochen)" },
+  { value: TIME_HORIZON_VALUES[1], label: "Standard (2-4 Wochen)" },
+  { value: TIME_HORIZON_VALUES[2], label: "Flexibel (1-4 Wochen)" },
+] as const;
+
+export const EARNINGS_SENSITIVITY_OPTIONS = [
+  {
+    value: EARNINGS_SENSITIVITY_VALUES[0],
+    label: "Strikt – Kein Trading <7 Tage vor Earnings",
+  },
+  { value: EARNINGS_SENSITIVITY_VALUES[1], label: "Neutral – Standard-Regeln" },
+  {
+    value: EARNINGS_SENSITIVITY_VALUES[2],
+    label: "Opportunistisch – Earnings als Chance",
+  },
+] as const;
+
+export const BETA_TOLERANCE_OPTIONS = [
+  { value: BETA_TOLERANCE_VALUES[0], label: "≤ 1.0 – Nur stabile Titel" },
+  { value: BETA_TOLERANCE_VALUES[1], label: "≤ 1.5 – Gemischtes Risiko" },
+  { value: BETA_TOLERANCE_VALUES[2], label: "> 1.5 – Hohes Momentum erlaubt" },
+] as const;
+
+export const ENTRY_PREFERENCE_OPTIONS = [
+  { value: ENTRY_PREFERENCE_VALUES[0], label: "Pullback / Mean Reversion" },
+  { value: ENTRY_PREFERENCE_VALUES[1], label: "Breakout / Momentum" },
+  { value: ENTRY_PREFERENCE_VALUES[2], label: "Ausgewogen" },
+] as const;
+
+export const DEFAULT_TRADER_PREFERENCES: TraderPreferences = {
+  riskProfile: "balanced",
+  capital: 25000,
+  riskPerTrade: 2,
+  timeHorizon: "standard",
+  earningsSensitivity: "neutral",
+  betaTolerance: "medium",
+  exposureLimit: 5,
+  customTicker: "",
+  entryPreference: "balanced",
+};
+
+export const PROFILE_EMAIL_STORAGE_KEY = "n8n-trade-profile-email";

@@ -8,9 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { WORKFLOW_STEPS } from "@/lib/constants";
-import { Clock, Shuffle, Database, Brain } from "lucide-react";
+import { UserCheck, Database, Workflow, Send, Clock } from "lucide-react";
 
-const icons = [Clock, Shuffle, Database, Brain];
+const icons = [UserCheck, Database, Workflow, Send];
 
 export function HowItWorks() {
   return (

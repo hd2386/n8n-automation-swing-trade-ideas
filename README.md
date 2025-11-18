@@ -84,20 +84,32 @@ Inside the workflow, variables are referenced with `{{ $env.VARIABLE_NAME }}`. E
 
 n8n substitutes the values at runtime from your `.env` file (or from system environment variables when running on a server).
 
-
 ## Key Files in This Repository
 
 - `system-prompt.js`: Builds the structured prompt handed to Google Gemini, including every rule of the technical trading framework.
 - `stocks_list.js`: Maintains the curated list of tickers the workflow samples from each day.
 - `n8n-swing-email-template.html`: Provides the HTML email layout used by the Gmail node to deliver the daily report.
+- `web/`: Next.js frontend that collects trader preferences and stores them in Supabase. See `web/env.example` for the required Supabase variables.
 
+### Personalization API & Supabase
+
+1. Launch the web UI (`web/` folder) and submit the subscription form. The form persists the following payload in Supabase (`trader_profiles` table): email, selected stocks, and a `preferences` JSON (risk profile, capital, earnings sensitivity, etc.).
+2. n8n can fetch a profile by calling the deployed website endpoint:
+
+   ```
+   GET https://your-domain.com/api/profile?email=trader@example.com
+   ```
+
+   The response matches the `Subscription` type from `web/types/index.ts`.
+
+3. In n8n, insert an HTTP Request node before `Build LLM Prompt Input`, store the JSON response in `$json.userProfile`, and then send that object along with the stock data into `system-prompt.js`.
+4. `system-prompt.js` now automatically adds a **Benutzerprofil** section and adapts stop-loss, timeframe, exposure and entry-style guidance based on those preferences. Missing fields fall back to sensible defaults (`DEFAULT_TRADER_PREFERENCES`).
 
 ## Best Practices
 
 - Double-check that your API keys are still valid (RapidAPI and Alpaca in particular).
 - When the recipient list changes, update **only** the `.env` file—no workflow edits required.
 - Google Gemini and Gmail are managed with n8n credential nodes. The IDs you see in the exported JSON are references only; they do not contain secrets.
-
 
 ## Security
 

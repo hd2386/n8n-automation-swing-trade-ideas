@@ -1,82 +1,31 @@
-import { Subscription } from "@/types";
-import { STORAGE_KEY } from "./constants";
+import { PROFILE_EMAIL_STORAGE_KEY } from "./constants";
 
-/**
- * Storage abstraction layer for subscriptions
- * Currently uses localStorage, but can be easily swapped for API calls
- */
-export const subscriptionStorage = {
-  /**
-   * Save or update a subscription
-   */
-  save(
-    subscription: Omit<Subscription, "createdAt" | "updatedAt">
-  ): Subscription {
-    const now = new Date().toISOString();
-    const existing = this.get();
+const isBrowser = typeof window !== "undefined";
 
-    const newSubscription: Subscription = {
-      ...subscription,
-      createdAt: existing?.createdAt || now,
-      updatedAt: now,
-    };
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newSubscription));
-    }
-
-    return newSubscription;
-  },
-
-  /**
-   * Get the current subscription
-   */
-  get(): Subscription | null {
-    if (typeof window === "undefined") {
-      return null;
-    }
-
+export const profileEmailStorage = {
+  get(): string | null {
+    if (!isBrowser) return null;
     try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (!data) return null;
-
-      return JSON.parse(data) as Subscription;
+      return localStorage.getItem(PROFILE_EMAIL_STORAGE_KEY);
     } catch (error) {
-      console.error("Error reading subscription from storage:", error);
+      console.error("Error reading profile email from storage:", error);
       return null;
     }
   },
-
-  /**
-   * Update an existing subscription
-   */
-  update(
-    updates: Partial<Omit<Subscription, "createdAt" | "updatedAt">>
-  ): Subscription | null {
-    const existing = this.get();
-    if (!existing) {
-      return null;
-    }
-
-    return this.save({
-      email: updates.email ?? existing.email,
-      selectedStocks: updates.selectedStocks ?? existing.selectedStocks,
-    });
-  },
-
-  /**
-   * Delete the subscription
-   */
-  delete(): void {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(STORAGE_KEY);
+  set(email: string): void {
+    if (!isBrowser) return;
+    try {
+      localStorage.setItem(PROFILE_EMAIL_STORAGE_KEY, email);
+    } catch (error) {
+      console.error("Error saving profile email to storage:", error);
     }
   },
-
-  /**
-   * Check if a subscription exists
-   */
-  exists(): boolean {
-    return this.get() !== null;
+  clear(): void {
+    if (!isBrowser) return;
+    try {
+      localStorage.removeItem(PROFILE_EMAIL_STORAGE_KEY);
+    } catch (error) {
+      console.error("Error removing profile email from storage:", error);
+    }
   },
 };

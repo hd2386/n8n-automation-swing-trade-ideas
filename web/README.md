@@ -33,10 +33,10 @@ This is the frontend web application for the HD Signals n8n automation project. 
 ## Features
 
 - **Landing Page**: Explains the n8n automation workflow and value proposition
-- **Subscription Management**: Users can subscribe with email and select 1-5 stocks
+- **Subscription Management**: Users can subscribe with email, select up to 5 stocks, and capture risk preferences
 - **Stock Selection**: Multi-select dropdown with stock icons from Clearbit
 - **Responsive Design**: Mobile-first, works on all screen sizes
-- **Local Storage**: Subscriptions are saved locally (extensible to backend API)
+- **Supabase Storage**: Trader profiles are persisted in Supabase and can be fetched via the `/api/profile` endpoint
 
 ## Project Structure
 
@@ -52,8 +52,9 @@ web/
 │   ├── features/          # Feature components
 │   └── layout/            # Layout components
 ├── lib/                   # Utilities and helpers
-│   ├── constants.ts      # Stock list and workflow steps
-│   ├── storage.ts         # Storage abstraction layer
+│   ├── constants.ts      # Stock list, workflow steps, option lists
+│   ├── storage.ts         # Browser helpers (profile email cache)
+│   ├── supabase.ts        # Supabase client helpers
 │   ├── utils.ts           # Utility functions
 │   └── validation.ts      # Zod schemas
 └── types/                 # TypeScript type definitions
@@ -79,12 +80,12 @@ npm start
 
 The codebase is structured to easily add new features:
 
-- **Storage Layer**: `lib/storage.ts` can be swapped for API calls
+- **Storage Layer**: Supabase integration is handled via `/app/api/profile` and `lib/supabase.ts`
 - **Component Structure**: New features can be added as components in `components/features/`
 - **Routing**: Additional pages can be added in `app/` directory
 
 ## Notes
 
 - Stock icons are loaded from Clearbit logo service
-- Subscriptions are stored in browser localStorage
+- Create an `env.local` (see `env.example`) with Supabase URL, anon key, and service role key before running the app
 - The design uses the custom color theme defined in `globals.css`

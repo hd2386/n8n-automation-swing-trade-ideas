@@ -7,32 +7,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, Zap, Shield, Mail } from "lucide-react";
+import {
+  SlidersHorizontal,
+  ShieldCheck,
+  ListChecks,
+  Send,
+} from "lucide-react";
 
 const features = [
   {
-    icon: Zap,
-    title: "AI-Powered Analysis",
+    icon: SlidersHorizontal,
+    title: "Profile-Calibrated Signals",
     description:
-      "Leveraging Gemini 2.5 Pro to analyze technical indicators and generate trading signals.",
+      "Risk level, capital, exposure limit and manual ticker feed directly into the LLM prompt.",
   },
   {
-    icon: Shield,
-    title: "Risk Management",
+    icon: ShieldCheck,
+    title: "Adaptive Risk Controls",
     description:
-      "Every signal includes entry, target, stop-loss, and risk/reward ratios.",
+      "Stop-loss multipliers, timeframes and earnings rules adjust to your beta and sensitivity settings.",
   },
   {
-    icon: Mail,
-    title: "Daily Delivery",
+    icon: ListChecks,
+    title: "User-Owned Watchlist",
     description:
-      "Receive your personalized report every weekday after market close.",
+      "You decide the exact tickers (1-5 plus an optional custom symbol) that get analyzed every day.",
   },
   {
-    icon: CheckCircle2,
-    title: "Technical Focus",
+    icon: Send,
+    title: "Automation Ready Output",
     description:
-      "Pure technical analysis based on RSI, MACD, Bollinger Bands, and more.",
+      "Gemini returns clean JSON suggestions that plug into email, dashboards or any workflow.",
   },
 ];
 
