@@ -7,12 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  SlidersHorizontal,
-  ShieldCheck,
-  ListChecks,
-  Send,
-} from "lucide-react";
+import { SlidersHorizontal, ShieldCheck, ListChecks, Send } from "lucide-react";
 
 const features = [
   {

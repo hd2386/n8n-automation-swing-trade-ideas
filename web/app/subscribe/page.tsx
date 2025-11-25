@@ -188,23 +188,29 @@ export default function SubscribePage() {
 
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <CardTitle>Active Subscription</CardTitle>
                 <CardDescription>
                   You're receiving daily signals for the selected stocks.
                 </CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditing(true)}
+                  className="w-full sm:w-auto"
                 >
                   <Edit2 className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
-                <Button variant="destructive" size="sm" onClick={handleDelete}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                  className="w-full sm:w-auto"
+                >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </Button>
