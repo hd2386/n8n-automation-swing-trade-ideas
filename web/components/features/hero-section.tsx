@@ -16,8 +16,8 @@ export function HeroSection() {
           >
             <TrendingUp className="h-4 w-4" />
             Powered by Gemini 2.5 Pro
+            <p>Test</p>
           </Badge>
-          <p>TEST</p>
           <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Daily AI Swing Trade Signals
           </h1>
