@@ -63,11 +63,6 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-
-      {/* Top fade for smooth transition */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent" />
-      {/* Bottom fade for smooth transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }
