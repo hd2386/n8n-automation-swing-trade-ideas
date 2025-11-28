@@ -1,0 +1,16 @@
+{
+  "name": "HD Signals - Daily AI Swing Trade Signals",
+  "short_name": "HD Signals",
+  "description": "Get daily technical analysis reports for US stocks. AI-powered swing trading signals delivered to your inbox.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "rgb(31, 63, 119)",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

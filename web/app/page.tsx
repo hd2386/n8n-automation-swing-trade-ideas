@@ -37,8 +37,47 @@ const features = [
 ];
 
 export default function Home() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://n8n-swing-trade.netlify.app";
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "HD Signals",
+    description:
+      "AI-powered daily swing trading signals for US stocks. Get personalized technical analysis reports delivered to your inbox.",
+    url: baseUrl,
+    logo: `${baseUrl}/icon.svg`,
+    sameAs: [],
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "HD Signals",
+    url: baseUrl,
+    description:
+      "Get daily technical analysis reports for US stocks. AI-powered swing trading signals delivered to your inbox.",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${baseUrl}/subscribe`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
       <HeroSection />
       <HowItWorks />
       <section className="py-20 md:py-32 bg-muted/50">
