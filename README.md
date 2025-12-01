@@ -2,7 +2,8 @@
 
 This repository contains the n8n workflow **"📈 Daily 5 Swing Trade Signal Bot"**, which technically analyses five U.S. stocks every market day after the close and delivers the findings via email. This document explains how to configure the required environment variables, how the automation works, and which best practices to follow.
 
----
+## Presentation Video
+[▶️ Click to watch](https://drive.google.com/file/d/1-0G6Nb6WZEh_31JPR0xB1EzJKRMWL1Yy/view?usp=sharing)
 
 ## Environment Variable Setup
 
