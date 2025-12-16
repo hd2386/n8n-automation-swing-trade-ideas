@@ -2,7 +2,10 @@
 
 This repository contains the n8n workflow **"📈 Daily 5 Swing Trade Signal Bot"**, which technically analyses five U.S. stocks every market day after the close and delivers the findings via email. This document explains how to configure the required environment variables, how the automation works, and which best practices to follow.
 
+**Personalization (optional):** You can fetch user profiles (email, selected stocks, preferences like risk profile, capital, earnings sensitivity, entry style) from the Next.js/Supabase API and pass them into the workflow so the LLM prompt adapts stops, timeframes, exposure limits, and wording per user.
+
 ## Presentation Video
+
 [▶️ Click to watch](https://drive.google.com/file/d/1-0G6Nb6WZEh_31JPR0xB1EzJKRMWL1Yy/view?usp=sharing)
 
 ## Environment Variable Setup
@@ -44,12 +47,17 @@ To keep API keys and recipient addresses out of the workflow export, all sensiti
 
 ## n8n Workflow
 
-<img width="1330" height="434" alt="görsel_2025-11-12_142515985" src="https://github.com/user-attachments/assets/428e8867-c021-40db-98b8-6ec251e2adf7" />
+<img width="1665" height="634" alt="image" src="https://github.com/user-attachments/assets/52019ecb-c8c1-422f-b184-0d6d9721cd36" />
+
 
 ## E-Mail Template
 
-<img width="634" height="565" alt="image" src="https://github.com/user-attachments/assets/558583fa-7ff9-4464-9e14-9b5682b0f2a4" />
-<img width="574" height="676" alt="image" src="https://github.com/user-attachments/assets/a1dbb469-1f9e-437b-a07b-3ddc3b8fb198" />
+<img width="664" height="586" alt="image" src="https://github.com/user-attachments/assets/3b05c75c-c012-4e16-a612-838473b468a4" />
+<img width="542" height="714" alt="image" src="https://github.com/user-attachments/assets/78e0d6d2-b8c6-4f72-8490-2f0982bd78a0" />
+<img width="547" height="650" alt="image" src="https://github.com/user-attachments/assets/25cdc9b7-a9f6-40d9-b48e-af4e87878541" />
+<img width="577" height="404" alt="image" src="https://github.com/user-attachments/assets/0e8064f0-4d05-4653-b9f9-908d65fd75af" />
+
+
 
 ---
 
@@ -64,10 +72,11 @@ The workflow runs automatically on weekdays shortly after the market closes. The
 5. **Merge**: Combines the historical bars and the quote snapshot into a consolidated payload per ticker.
 6. **🧮 Format EOD Data**: Computes technical indicators (RSI, MACD, ATR, Bollinger Bands, moving averages, MFI, etc.).
 7. **📊 Filter Valid Stock Data**: Builds the cleaned list in the exact structure expected by the prompt builder.
-8. **🗃️ Build LLM Prompt Input**: Creates a detailed German-language prompt that explains the swing-trading strategy step by step.
-9. **Message a model (Gemini)**: Sends the prompt to Google Gemini, receiving structured JSON recommendations in return.
-10. **Split Trade Recommendations**: Normalises the JSON so each trade idea is processed individually.
-11. **📧 Send a message (Gmail)**: Delivers a formatted HTML report to the recipients defined in `TRADE_REPORT_RECIPIENTS`.
+8. _(Optional)_ **Fetch Trader Profile (HTTP)**: Call `/api/profile?email=...` to retrieve user preferences and selected stocks; store as `$json.userProfile`.
+9. **🗃️ Build LLM Prompt Input**: Creates a detailed German-language prompt that explains the swing-trading strategy step by step, merging `$json.stocks` and `$json.userProfile` (if present).
+10. **Message a model (Gemini)**: Sends the prompt to Google Gemini, receiving structured JSON recommendations in return.
+11. **Split Trade Recommendations**: Normalises the JSON so each trade idea is processed individually.
+12. **📧 Send a message (Gmail)**: Delivers a formatted HTML report to the recipients defined in `TRADE_REPORT_RECIPIENTS`.
 
 > **Important:** The workflow deliberately relies **only on technical market data** (price, volume, indicators). It does **not** consider news, macroeconomic data, fundamentals, or sentiment inputs. Outputs should be treated as technical analysis signals only.
 
