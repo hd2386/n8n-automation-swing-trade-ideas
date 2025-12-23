@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { getSupabaseAdminClient } from "@/lib/supabase";
+import { createServerSupabase } from "@/lib/supabase-server";
 import { subscriptionSchema } from "@/lib/validation";
 import { DEFAULT_TRADER_PREFERENCES } from "@/lib/constants";
 import type { Subscription } from "@/types";
@@ -32,25 +33,32 @@ const mapRowToSubscription = (row: TraderProfileRow): Subscription => ({
 });
 
 export async function GET(request: NextRequest) {
-  const email = request.nextUrl.searchParams.get("email");
-
-  if (!email) {
-    return NextResponse.json(
-      { message: "Email parameter is required" },
-      { status: 400 }
-    );
-  }
-
   try {
-    const supabase = getSupabaseAdminClient();
-    const { data, error } = await supabase
+    // Get authenticated user from session
+    const supabase = createServerSupabase();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user || !user.email) {
+      return NextResponse.json(
+        { message: "Unauthorized - Please sign in" },
+        { status: 401 }
+      );
+    }
+
+    const email = user.email;
+
+    // Use admin client to fetch profile (or use RLS with regular client)
+    const adminSupabase = getSupabaseAdminClient();
+    const { data, error } = await adminSupabase
       .from(TABLE)
       .select("*")
       .eq("email", email)
       .maybeSingle<TraderProfileRow>();
 
     if (error) {
-      console.error("Supabase GET error:", error);
       return NextResponse.json(
         { message: "Unable to load profile" },
         { status: 500 }
@@ -66,7 +74,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(mapRowToSubscription(data));
   } catch (error) {
-    console.error("Profile GET error:", error);
     return NextResponse.json(
       { message: "Unexpected error fetching profile" },
       { status: 500 }
@@ -76,10 +83,32 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Get authenticated user from session
+    const supabase = createServerSupabase();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user || !user.email) {
+      return NextResponse.json(
+        { message: "Unauthorized - Please sign in" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const parsed = subscriptionSchema.parse(body);
 
-    const supabase = getSupabaseAdminClient();
+    // Ensure the email in the request matches the authenticated user's email
+    if (parsed.email !== user.email) {
+      return NextResponse.json(
+        { message: "Email mismatch - cannot update another user's profile" },
+        { status: 403 }
+      );
+    }
+
+    const adminSupabase = getSupabaseAdminClient();
     const payload = {
       email: parsed.email,
       selected_stocks: parsed.selectedStocks,
@@ -96,14 +125,13 @@ export async function POST(request: NextRequest) {
       }),
     };
 
-    const { data, error } = await supabase
+    const { data, error } = await adminSupabase
       .from(TABLE)
       .upsert(payload, { onConflict: "email" })
       .select()
       .single<TraderProfileRow>();
 
     if (error) {
-      console.error("Supabase POST error:", error);
       return NextResponse.json(
         { message: "Unable to save profile" },
         { status: 500 }
@@ -122,7 +150,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error("Profile POST error:", error);
     return NextResponse.json(
       { message: "Unexpected error saving profile" },
       { status: 500 }
@@ -131,21 +158,30 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const email = request.nextUrl.searchParams.get("email");
-
-  if (!email) {
-    return NextResponse.json(
-      { message: "Email parameter is required" },
-      { status: 400 }
-    );
-  }
-
   try {
-    const supabase = getSupabaseAdminClient();
-    const { error } = await supabase.from(TABLE).delete().eq("email", email);
+    // Get authenticated user from session
+    const supabase = createServerSupabase();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user || !user.email) {
+      return NextResponse.json(
+        { message: "Unauthorized - Please sign in" },
+        { status: 401 }
+      );
+    }
+
+    const email = user.email;
+
+    const adminSupabase = getSupabaseAdminClient();
+    const { error } = await adminSupabase
+      .from(TABLE)
+      .delete()
+      .eq("email", email);
 
     if (error) {
-      console.error("Supabase DELETE error:", error);
       return NextResponse.json(
         { message: "Unable to delete profile" },
         { status: 500 }
@@ -154,7 +190,6 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Profile DELETE error:", error);
     return NextResponse.json(
       { message: "Unexpected error deleting profile" },
       { status: 500 }

@@ -7,7 +7,6 @@ import {
   subscriptionSchema,
   type SubscriptionFormData,
 } from "@/lib/validation";
-import { profileEmailStorage } from "@/lib/storage";
 import {
   DEFAULT_TRADER_PREFERENCES,
   BETA_TOLERANCE_OPTIONS,
@@ -16,6 +15,8 @@ import {
   RISK_PROFILE_OPTIONS,
   TIME_HORIZON_OPTIONS,
 } from "@/lib/constants";
+import { createBrowserSupabase } from "@/lib/supabase-browser";
+import { pendingSubscriptionStorage } from "@/lib/storage";
 import { StockSelector } from "./stock-selector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +36,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Mail } from "lucide-react";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -79,6 +81,19 @@ export function SubscriptionForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createBrowserSupabase();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session && !!session.user);
+    };
+    void checkAuth();
+  }, []);
 
   const mergedPreferences = useMemo<TraderPreferences>(
     () => ({
@@ -108,6 +123,45 @@ export function SubscriptionForm({
     setErrorMessage(null);
 
     try {
+      const supabase = createBrowserSupabase();
+
+      // Check if user is authenticated
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        // User not authenticated - send magic link and save form data
+        const normalizedTicker =
+          data.customTicker?.toUpperCase?.().trim() ?? "";
+        const formData = {
+          ...data,
+          customTicker: normalizedTicker,
+        };
+
+        // Save form data to localStorage
+        pendingSubscriptionStorage.set(formData);
+
+        // Send magic link
+        const { error: linkError } = await supabase.auth.signInWithOtp({
+          email: data.email,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback?next=/subscribe`,
+            shouldCreateUser: true,
+          },
+        });
+
+        if (linkError) {
+          throw new Error(linkError.message || "Failed to send login link");
+        }
+
+        // Show success message
+        setIsSuccess(true);
+        setErrorMessage(null);
+        return;
+      }
+
+      // User is authenticated - save profile directly
       const normalizedTicker = data.customTicker?.toUpperCase?.().trim() ?? "";
 
       const body = {
@@ -129,7 +183,9 @@ export function SubscriptionForm({
       }
 
       const savedProfile = (await response.json()) as Subscription;
-      profileEmailStorage.set(savedProfile.email);
+
+      // Clear pending subscription if exists
+      pendingSubscriptionStorage.clear();
 
       form.reset(
         buildFormValues(
@@ -146,7 +202,6 @@ export function SubscriptionForm({
         }, 1200);
       }
     } catch (error) {
-      console.error("Error saving subscription:", error);
       setErrorMessage(
         error instanceof Error ? error.message : "Unknown error occurred"
       );
@@ -156,14 +211,41 @@ export function SubscriptionForm({
   };
 
   if (isSuccess) {
+    // Check if we're waiting for magic link (pending subscription)
+    const pendingData = pendingSubscriptionStorage.get();
+
+    if (pendingData) {
+      // New user - waiting for magic link
+      return (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Mail className="mb-4 h-12 w-12 text-primary" />
+              <h3 className="mb-2 text-xl font-semibold">Check Your Email!</h3>
+              <p className="text-muted-foreground mb-4">
+                We've sent a magic link to <strong>{pendingData.email}</strong>.
+                Click the link to complete your subscription.
+              </p>
+              <p className="text-sm text-muted-foreground mb-6">
+                Your form data has been saved and will be submitted
+                automatically after you sign in.
+              </p>
+              <div className="rounded-lg border"></div>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // Authenticated user - subscription saved
     return (
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <CheckCircle2 className="mb-4 h-12 w-12 text-green-500" />
             <h3 className="mb-2 text-xl font-semibold">Subscription Saved!</h3>
-            <p className="text-muted-foreground">
-              Deine Trading-Präferenzen wurden gespeichert.
+            <p className="text-muted-foreground mb-6">
+              Your trading preferences have been saved.
             </p>
           </div>
         </CardContent>
@@ -199,10 +281,17 @@ export function SubscriptionForm({
                       type="email"
                       placeholder="your.email@example.com"
                       {...field}
+                      disabled={isAuthenticated && !!initialEmail}
+                      className={
+                        isAuthenticated && !!initialEmail ? "bg-muted" : ""
+                      }
+                      required
                     />
                   </FormControl>
                   <FormDescription>
-                    We'll send daily reports to this address.
+                    {isAuthenticated && initialEmail
+                      ? "Your email is set from your account. We'll send daily reports to this address."
+                      : "Enter your email address. We'll send a magic link to complete your subscription."}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

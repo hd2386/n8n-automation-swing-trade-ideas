@@ -10,6 +10,7 @@ const getEnv = (key: string) => {
   return value;
 };
 
+// Admin client for server-side operations (bypasses RLS)
 export const getSupabaseAdminClient = (): SupabaseClient => {
   if (cachedAdminClient) {
     return cachedAdminClient;

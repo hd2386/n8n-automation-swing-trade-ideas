@@ -67,6 +67,10 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+
+    /* text-primary and text-secondary mappings */
+    --text-primary: var(--primary);
+    --text-secondary: var(--primary-foreground);
   }
 
   .dark {
@@ -102,6 +106,10 @@
     --sidebar-accent-foreground: rgb(250, 250, 250);
     --sidebar-border: rgb(40, 40, 40);
     --sidebar-ring: rgb(82, 82, 82);
+
+    /* text-primary and text-secondary mappings for dark */
+    --text-primary: var(--primary);
+    --text-secondary: var(--primary-foreground);
   }
 }
 
@@ -112,5 +120,15 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* text-primary: same as bg-primary */
+  .text-primary {
+    color: var(--primary) !important;
+  }
+
+  /* text-secondary: same as primary-foreground */
+  .text-secondary {
+    color: var(--primary-foreground) !important;
   }
 }
