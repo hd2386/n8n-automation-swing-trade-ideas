@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { createBrowserSupabase } from "@/lib/supabase-browser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginContent() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -127,5 +127,26 @@ export default function LoginPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container flex min-h-screen items-center justify-center py-10">
+          <div className="mx-auto w-full max-w-md">
+            <Card>
+              <CardHeader>
+                <CardTitle>Sign In</CardTitle>
+                <CardDescription>Loading...</CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { createBrowserSupabase } from "@/lib/supabase-browser";
 import { useRouter, useSearchParams } from "next/navigation";
 import { pendingSubscriptionStorage } from "@/lib/storage";
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get("code");
@@ -166,5 +166,22 @@ export default function AuthCallbackPage() {
         <p>Completing sign in...</p>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto"></div>
+            <p>Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
