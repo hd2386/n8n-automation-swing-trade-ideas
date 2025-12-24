@@ -199,7 +199,12 @@ export default function SubscribePage() {
             },
             body: JSON.stringify(pending),
           })
-            .then((res) => res.json())
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Failed to submit pending subscription");
+              }
+              return res.json();
+            })
             .then((profile) => {
               pendingSubscriptionStorage.clear();
               setSubscription(profile);
