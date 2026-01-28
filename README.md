@@ -4,9 +4,13 @@ This repository contains the n8n workflow **"📈 Daily 5 Swing Trade Signal Bot
 
 **Personalization (optional):** You can fetch user profiles (email, selected stocks, preferences like risk profile, capital, earnings sensitivity, entry style) from the Next.js/Supabase API and pass them into the workflow so the LLM prompt adapts stops, timeframes, exposure limits, and wording per user.
 
+
 ## Presentation Video
 
 [▶️ Click to watch](https://drive.google.com/file/d/1-0G6Nb6WZEh_31JPR0xB1EzJKRMWL1Yy/view?usp=sharing)
+
+## Dokumentation
+[Doku](https://github.com/hd2386/KI-in-der-Kundenkommunikation/blob/main/Projektbericht_KI_in_Kundenkommunikation.pdf)
 
 ## Environment Variable Setup
 
